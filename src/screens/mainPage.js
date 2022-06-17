@@ -4,25 +4,27 @@ import { Entypo, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useSelector, useDispatch } from "react-redux"
 import { bindActionCreators } from 'redux'
 import * as Action from '../state/Action'
-import {BackHandler} from 'react-native';
+
 
 
 
 const color = {
-    primary: '#007AFF',
+    primary: '#673ab7',
     white: '#ffffff',
     gray: '#C4C4C4',
 }
 
 function MainPage({ navigation }) {
 
+
+    //ไม่ให้กลับหน้า Loadding
     useEffect(() =>
-    navigation.addListener('beforeRemove', (e) => {
-        e.preventDefault();
-        return
-    }),
-    [navigation]
-);
+        navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            return
+        }),
+        [navigation]
+    );
 
 
 
@@ -30,7 +32,7 @@ function MainPage({ navigation }) {
     const { deleteMember } = bindActionCreators(Action, dispatch);
     const members = useSelector((state) => state.member);
 
-    const onDeleteItem = (id, name,surname) => Alert.alert(
+    const onDeleteItem = (id, name, surname) => Alert.alert(
         "ลบสมาชิก",
         `ต้องการลบ \n${name}  ${surname} `,
         [
@@ -101,7 +103,7 @@ function MainPage({ navigation }) {
                     contentContainerStyle={{ flexGrow: 1 }}
                     renderItem={({ item }) =>
                         <MemberItem
-                            onDeletePressed={() => onDeleteItem(item.id, item.name,item.surname)}
+                            onDeletePressed={() => onDeleteItem(item.id, item.name, item.surname)}
                             onEditPressed={() => onEditItem(item)}
                             member={item}
                         />}
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
         paddingTop: Dimensions.get('screen').width / 2
     },
     addFirstButton: {
-        backgroundColor: '#0080FE',
+        backgroundColor: '#673ab7',
         padding: 12,
         borderRadius: 4,
         width: 150
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
         marginVertical: 6,
         padding: 12,
         borderWidth: 1,
-        borderColor: '#0080FE',
+        borderColor: '#673ab7',
     },
     containerMember: {
         width: '94%',

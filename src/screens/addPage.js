@@ -11,15 +11,13 @@ const ERR_MESSAGE_SURNAME = 'กรุณากรอกนามสกุล'
 const ERR_MESSAGE_USER_ID = 'กรุณากรอกเลขบัตรประชาชน'
 const ERR_MESSAGE_CHECK_USER_ID = 'กรุณากรอกเลขบัตรประชาชนให้ถูกต้อง'
 const ERR_MESSAGE_PHONE = 'กรุณากรอกเบอร์โทรศัพท์'
-
-
-
+const ERR_MESSAGE_CHECK_PHONE = 'กรุณากรอกเลขบัตรประชาชนให้ถูกต้อง'
 
 
 
 
 const color = {
-  primary: '#007AFF',
+  primary: '#673ab7',
   white: '#ffffff',
   gray: '#C4C4C4',
 }
@@ -41,26 +39,35 @@ function AddPage({ route, navigation }) {
   const [isUserIdEdited, setIsUserIdEdited] = useState(false);
   const [isPhoneIdEdited, setIsPhoneIdEdited] = useState(false);
 
-  const isNameValid = name.length > 0
-  const isSurnameValid = surname.length > 0
-  const isUserIdValid = userId.length == 0 
-  const isUserIdValidCheck = userId.length > 0 && userId.length < 17
-  const isPhoneNumberValid = phoneNumber.length == 12
+  const isName = name.length > 0
+  const isSurname = surname.length > 0
+  const isUserId = userId.length == 0
+  const isUserIdCheck = userId.length > 0 && userId.length < 17
+  const isPhoneNumber = phoneNumber.length == 0
+  const isPhoneNumberCheck = phoneNumber.length > 0 && phoneNumber.length < 11
 
-  const canSubmit = isNameValid && isSurnameValid && isUserIdValid && isPhoneNumberValid
+  const canSubmit = isName && isSurname && !isUserId && !isPhoneNumber && !isUserIdCheck && !isPhoneNumberCheck
+  console.log(canSubmit);
+  console.log('-----');
+  console.log(isName);
+  console.log(isSurname);
+  console.log(!isUserId);
+  console.log(!isPhoneNumber);
+  console.log(!isUserIdCheck);
+  console.log(!isPhoneNumberCheck);
+  console.log('-------');
+
+
 
   const dispatch = useDispatch();
   const { addMember, editMember } = bindActionCreators(MemberAction, dispatch);
 
 
 
-  const errorName = !isNameValid && isNameEdited ? ERR_MESSAGE_NAME : ''
-  const errorSurname = !isSurnameValid && isSurnameEdited ? ERR_MESSAGE_SURNAME : ''
-  const errorID =  isUserIdValid && isUserIdEdited ?  ERR_MESSAGE_USER_ID : isUserIdValidCheck && isUserIdEdited ? ERR_MESSAGE_CHECK_USER_ID : ''
-  const errorPhone = !isPhoneNumberValid && isPhoneIdEdited ? ERR_MESSAGE_PHONE : ''
-
-
-
+  const errorName = !isName && isNameEdited ? ERR_MESSAGE_NAME : ''
+  const errorSurname = !isSurname && isSurnameEdited ? ERR_MESSAGE_SURNAME : ''
+  const errorID = isUserId && isUserIdEdited ? ERR_MESSAGE_USER_ID : isUserIdCheck && isUserIdEdited ? ERR_MESSAGE_CHECK_USER_ID : ''
+  const errorPhone = isPhoneNumber && isPhoneIdEdited ? ERR_MESSAGE_PHONE : isPhoneNumberCheck && isPhoneIdEdited ? ERR_MESSAGE_CHECK_PHONE : ''
 
 
   useEffect(() => {
@@ -100,7 +107,6 @@ function AddPage({ route, navigation }) {
   const onPhoneEditing = (phoneText) => {
     let text = (phoneText).replace(/\D/g, '');
     if (text.length >= 4) text = text.slice(0, 3) + '-' + text.slice(3);
-    if (text.length >= 8) text = text.slice(0, 7) + '-' + text.slice(7);
     setPhoneNumber(text)
   }
 
@@ -153,7 +159,7 @@ function AddPage({ route, navigation }) {
         value={phoneNumber}
         onChangeText={onPhoneEditing}
         placeholder={'เบอร์โทรศัพท์'}
-        maxLength={12}
+        maxLength={11}
         style={styles.input}
         keyboardType='phone-pad'
         returnKeyType='done'
