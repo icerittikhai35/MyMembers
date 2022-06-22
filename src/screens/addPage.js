@@ -28,10 +28,15 @@ function AddPage({ route, navigation }) {
   const userIdInput = useRef();
   const phoneInput = useRef();
 
+
+
+
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [userId, setUserId] = useState('');
+  const userIdPatt = userId.replace(/\W/g, '');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const phoneNumberPatt = phoneNumber.replace(/\W/g, '');
   const [isEditing, setIsEditing] = useState(false);
 
   const [isNameEdited, setIsNameEdited] = useState(false);
@@ -42,15 +47,15 @@ function AddPage({ route, navigation }) {
   const isName = name.length > 0
   const isSurname = surname.length > 0
   const isUserId = userId.length == 0
-  const isUserIdCheck = userId.length > 0 && userId.length < 13
+  const isUserIdCheck = userId.length > 0 && userId.length < 17
   const pattPassword = /1{13}|2{13}|3{13}|4{13}|5{13}|6{13}|7{13}|8{13}|9{13}|0{13}/
-  const isPattPassword = pattPassword.test(userId);
+  const isPattPassword = pattPassword.test(userIdPatt);
   const isPhoneNumber = phoneNumber.length == 0
-  const isPhoneNumberCheck = phoneNumber.length > 0 && phoneNumber.length < 10
+  const isPhoneNumberCheck = phoneNumber.length > 0 && phoneNumber.length < 11
   const pattPhoneNumber = /1{10}|2{10}|3{10}|4{10}|5{10}|6{10}|7{10}|8{10}|9{10}|0{10}/
-  const isPattPhoneNumber = pattPhoneNumber.test(phoneNumber);
-  console.log(isPattPhoneNumber);
+  const isPattPhoneNumber = pattPhoneNumber.test(phoneNumberPatt);
 
+  console.log(isPattPhoneNumber);
 
   const canSubmit = isName && isSurname && !isUserId && !isPhoneNumber && !isUserIdCheck && !isPhoneNumberCheck && !isPattPassword && !isPattPhoneNumber
 
@@ -74,33 +79,35 @@ function AddPage({ route, navigation }) {
       setIsEditing(true);
       setName(member.name);
       setSurname(member.surname);
-      setUserId(member.userId);
-      setPhoneNumber(member.phoneNumber);
+      setUserId(member.userIdPatt);
+      setPhoneNumber(member.phoneNumberPatt);
     } else {
       navigation.setOptions({ title: 'เพิ่มสมาชิก' });
     }
   }, [])
 
   const onAddMember = () => {
-    addMember({ name, surname, userId, phoneNumber });
+    addMember({ name, surname, userIdPatt, phoneNumberPatt });
     navigation.goBack();
   }
 
   const onEditMember = () => {
     const { member } = route.params
-    editMember({ name, surname, userId, phoneNumber, id: member.id });
+    editMember({ name, surname, userIdPatt, phoneNumberPatt, id: member.id });
     navigation.goBack();
   }
-
   const onUserIdEditing = (userIdText) => {
-    let text = (userIdText);
-
+    let text = (userIdText).replace(/\D/g, '');
+    if (text.length >= 2) text = text.slice(0, 1) + '-' + text.slice(1);
+    if (text.length >= 7) text = text.slice(0, 6) + '-' + text.slice(6);
+    if (text.length >= 13) text = text.slice(0, 12) + '-' + text.slice(12);
+    if (text.length >= 16) text = text.slice(0, 15) + '-' + text.slice(15);
     setUserId(text)
   }
 
   const onPhoneEditing = (phoneText) => {
-    let text = (phoneText);
-
+    let text = (phoneText).replace(/\D/g, '');
+    if (text.length >= 4) text = text.slice(0, 3) + '-' + text.slice(3);
     setPhoneNumber(text)
   }
 
@@ -138,7 +145,7 @@ function AddPage({ route, navigation }) {
         value={userId}
         onChangeText={onUserIdEditing}
         placeholder={'เลขบัตรประชาชน'}
-        maxLength={13}
+        maxLength={17}
         style={styles.input}
         returnKeyType='next'
         keyboardType='numeric'
@@ -154,7 +161,7 @@ function AddPage({ route, navigation }) {
         value={phoneNumber}
         onChangeText={onPhoneEditing}
         placeholder={'เบอร์โทรศัพท์'}
-        maxLength={10}
+        maxLength={11}
         style={styles.input}
         keyboardType='phone-pad'
         returnKeyType='done'

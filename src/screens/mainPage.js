@@ -7,8 +7,6 @@ import * as Action from '../state/Action'
 import { useState } from 'react';
 
 
-
-
 const color = {
     primary: '#673ab7',
     white: '#ffffff',
@@ -49,9 +47,9 @@ function MainPage({ navigation }) {
     const onEditItem = (member) => navigation.push('add', { member })
 
     const MemberItem = ({ onDeletePressed, onEditPressed, member }) => {
-        const { name, surname, userId, phoneNumber } = member
+        const { name, surname, userIdPatt, phoneNumberPatt } = member
 
-        let userIdFormat = (userId)
+        let userIdFormat = (userIdPatt)
         if (userIdFormat.length >= 2) userIdFormat = userIdFormat.slice(0, 1) + '-' + userIdFormat.slice(1);
         if (userIdFormat.length >= 7) userIdFormat = userIdFormat.slice(0, 6) + '-' + userIdFormat.slice(6);
         if (userIdFormat.length >= 13) userIdFormat = userIdFormat.slice(0, 12) + '-' + userIdFormat.slice(12);
@@ -59,7 +57,7 @@ function MainPage({ navigation }) {
         ;
        
 
-        let phoneFormat = (phoneNumber)
+        let phoneFormat = (phoneNumberPatt)
         if (phoneFormat.length >= 4) phoneFormat = phoneFormat.slice(0, 3) + '-' + phoneFormat.slice(3);
     
         console.log(phoneFormat);
