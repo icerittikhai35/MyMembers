@@ -11,7 +11,7 @@ const ERR_MESSAGE_SURNAME = 'กรุณากรอกนามสกุล'
 const ERR_MESSAGE_USER_ID = 'กรุณากรอกเลขบัตรประชาชน'
 const ERR_MESSAGE_CHECK_USER_ID = 'กรุณากรอกเลขบัตรประชาชนให้ถูกต้อง'
 const ERR_MESSAGE_PHONE = 'กรุณากรอกเบอร์โทรศัพท์'
-const ERR_MESSAGE_CHECK_PHONE = 'กรุณากรอกเลขบัตรประชาชนให้ถูกต้อง'
+const ERR_MESSAGE_CHECK_PHONE = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง'
 
 
 
@@ -42,20 +42,17 @@ function AddPage({ route, navigation }) {
   const isName = name.length > 0
   const isSurname = surname.length > 0
   const isUserId = userId.length == 0
-  const isUserIdCheck = userId.length > 0 && userId.length < 17
+  const isUserIdCheck = userId.length > 0 && userId.length < 13
+  const pattPassword = /1{13}|2{13}|3{13}|4{13}|5{13}|6{13}|7{13}|8{13}|9{13}|0{13}/
+  const isPattPassword = pattPassword.test(userId);
   const isPhoneNumber = phoneNumber.length == 0
-  const isPhoneNumberCheck = phoneNumber.length > 0 && phoneNumber.length < 11
+  const isPhoneNumberCheck = phoneNumber.length > 0 && phoneNumber.length < 10
+  const pattPhoneNumber = /1{10}|2{10}|3{10}|4{10}|5{10}|6{10}|7{10}|8{10}|9{10}|0{10}/
+  const isPattPhoneNumber = pattPhoneNumber.test(phoneNumber);
+  console.log(isPattPhoneNumber);
 
-  const canSubmit = isName && isSurname && !isUserId && !isPhoneNumber && !isUserIdCheck && !isPhoneNumberCheck
-  console.log(canSubmit);
-  console.log('-----');
-  console.log(isName);
-  console.log(isSurname);
-  console.log(!isUserId);
-  console.log(!isPhoneNumber);
-  console.log(!isUserIdCheck);
-  console.log(!isPhoneNumberCheck);
-  console.log('-------');
+
+  const canSubmit = isName && isSurname && !isUserId && !isPhoneNumber && !isUserIdCheck && !isPhoneNumberCheck && !isPattPassword && !isPattPhoneNumber
 
 
 
@@ -66,8 +63,8 @@ function AddPage({ route, navigation }) {
 
   const errorName = !isName && isNameEdited ? ERR_MESSAGE_NAME : ''
   const errorSurname = !isSurname && isSurnameEdited ? ERR_MESSAGE_SURNAME : ''
-  const errorID = isUserId && isUserIdEdited ? ERR_MESSAGE_USER_ID : isUserIdCheck && isUserIdEdited ? ERR_MESSAGE_CHECK_USER_ID : ''
-  const errorPhone = isPhoneNumber && isPhoneIdEdited ? ERR_MESSAGE_PHONE : isPhoneNumberCheck && isPhoneIdEdited ? ERR_MESSAGE_CHECK_PHONE : ''
+  const errorID = isUserId && isUserIdEdited ? ERR_MESSAGE_USER_ID : isUserIdCheck && isUserIdEdited ? ERR_MESSAGE_CHECK_USER_ID : isPattPassword && isUserIdEdited ? ERR_MESSAGE_CHECK_USER_ID : ''
+  const errorPhone = isPhoneNumber && isPhoneIdEdited ? ERR_MESSAGE_PHONE : isPhoneNumberCheck && isPhoneIdEdited ? ERR_MESSAGE_CHECK_PHONE : isPattPhoneNumber && isPhoneIdEdited ? ERR_MESSAGE_CHECK_PHONE : ''
 
 
   useEffect(() => {
@@ -96,17 +93,14 @@ function AddPage({ route, navigation }) {
   }
 
   const onUserIdEditing = (userIdText) => {
-    let text = (userIdText).replace(/\D/g, '');
-    if (text.length >= 2) text = text.slice(0, 1) + '-' + text.slice(1);
-    if (text.length >= 7) text = text.slice(0, 6) + '-' + text.slice(6);
-    if (text.length >= 13) text = text.slice(0, 12) + '-' + text.slice(12);
-    if (text.length >= 16) text = text.slice(0, 15) + '-' + text.slice(15);
+    let text = (userIdText);
+
     setUserId(text)
   }
 
   const onPhoneEditing = (phoneText) => {
-    let text = (phoneText).replace(/\D/g, '');
-    if (text.length >= 4) text = text.slice(0, 3) + '-' + text.slice(3);
+    let text = (phoneText);
+
     setPhoneNumber(text)
   }
 
@@ -122,6 +116,7 @@ function AddPage({ route, navigation }) {
         onSubmitEditing={() => surnameInput.current.focus()}
         onEndEditing={() => setIsNameEdited(true)}
         activeUnderlineColor='#C4C4C4'
+
       />
       <Text style={styles.errMessage}>{errorName}</Text>
 
@@ -143,7 +138,7 @@ function AddPage({ route, navigation }) {
         value={userId}
         onChangeText={onUserIdEditing}
         placeholder={'เลขบัตรประชาชน'}
-        maxLength={17}
+        maxLength={13}
         style={styles.input}
         returnKeyType='next'
         keyboardType='numeric'
@@ -159,7 +154,7 @@ function AddPage({ route, navigation }) {
         value={phoneNumber}
         onChangeText={onPhoneEditing}
         placeholder={'เบอร์โทรศัพท์'}
-        maxLength={11}
+        maxLength={10}
         style={styles.input}
         keyboardType='phone-pad'
         returnKeyType='done'

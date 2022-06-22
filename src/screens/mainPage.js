@@ -4,6 +4,7 @@ import { Entypo, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useSelector, useDispatch } from "react-redux"
 import { bindActionCreators } from 'redux'
 import * as Action from '../state/Action'
+import { useState } from 'react';
 
 
 
@@ -49,6 +50,24 @@ function MainPage({ navigation }) {
 
     const MemberItem = ({ onDeletePressed, onEditPressed, member }) => {
         const { name, surname, userId, phoneNumber } = member
+
+        let userIdFormat = (userId)
+        if (userIdFormat.length >= 2) userIdFormat = userIdFormat.slice(0, 1) + '-' + userIdFormat.slice(1);
+        if (userIdFormat.length >= 7) userIdFormat = userIdFormat.slice(0, 6) + '-' + userIdFormat.slice(6);
+        if (userIdFormat.length >= 13) userIdFormat = userIdFormat.slice(0, 12) + '-' + userIdFormat.slice(12);
+        if (userIdFormat.length >= 16) userIdFormat = userIdFormat.slice(0, 15) + '-' + userIdFormat.slice(15);
+        ;
+       
+
+        let phoneFormat = (phoneNumber)
+        if (phoneFormat.length >= 4) phoneFormat = phoneFormat.slice(0, 3) + '-' + phoneFormat.slice(3);
+    
+        console.log(phoneFormat);
+
+
+
+
+
         return (
             <View style={styles.containerMember}>
                 <View style={styles.wrapContent}>
@@ -56,8 +75,8 @@ function MainPage({ navigation }) {
                         <Text style={styles.title}>{name}   </Text>
                         <Text style={styles.title}>{surname}</Text>
                     </View>
-                    <Text style={styles.label}>{userId}</Text>
-                    <Text style={styles.label}>{phoneNumber}</Text>
+                    <Text style={styles.label}>{userIdFormat}</Text>
+                    <Text style={styles.label}>{phoneFormat}</Text>
                 </View>
                 <View style={styles.wrapIcon}>
                     <TouchableOpacity onPress={onEditPressed}>
